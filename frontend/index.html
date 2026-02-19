@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligently Connected Networks Lab - PTIT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1a4d8f;
+            --secondary: #2563eb;
+            --accent: #0ea5e9;
+            --red: #dc2626;
+            --red-dark: #991b1b;
+            --gold: #fbbf24;
+            --dark: #0f172a;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+            background: var(--light);
+        }
+
+        /* Navigation */
+        .nav-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--red), var(--red-dark));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text strong {
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 1.3rem;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text span {
+            font-size: 0.75rem;
+            color: var(--gray);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            font-size: 0.95rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--red);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--red);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .lang-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            overflow: hidden;
+        }
+
+        .lang-btn:hover {
+            transform: scale(1.1);
+            border-color: var(--red);
+        }
+
+        /* Hero Section - Tết Theme */
+        .hero {
+            margin-top: 80px;
+            height: 85vh;
+            background: linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #b91c1c 100%);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(251, 191, 36, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(251, 191, 36, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 40%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle, rgba(251, 191, 36, 0.4) 2px, transparent 2px),
+                radial-gradient(circle, rgba(251, 191, 36, 0.3) 1px, transparent 1px);
+            background-size: 100px 100px, 50px 50px;
+            background-position: 0 0, 25px 25px;
+            opacity: 0.3;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100px); }
+        }
+
+        .hero-grid {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(251, 191, 36, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(251, 191, 36, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.4;
+        }
+
+        /* Tết decorations - Hoa mai/đào */
+        .tet-flower {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            opacity: 0.3;
+            animation: flowerFloat 15s ease-in-out infinite;
+        }
+
+        .tet-flower:nth-child(1) {
+            top: 10%;
+            left: 5%;
+            animation-delay: 0s;
+        }
+
+        .tet-flower:nth-child(2) {
+            top: 60%;
+            right: 8%;
+            animation-delay: 3s;
+        }
+
+        .tet-flower:nth-child(3) {
+            bottom: 15%;
+            left: 15%;
+            animation-delay: 6s;
+        }
+
+        .tet-flower:nth-child(4) {
+            top: 30%;
+            right: 20%;
+            animation-delay: 9s;
+        }
+
+        @keyframes flowerFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-20px) rotate(10deg);
+                opacity: 0.5;
+            }
+        }
+
+        /* Pháo hoa particles */
+        .firework {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 10px var(--gold);
+            animation: fireworkAnim 3s ease-out infinite;
+        }
+
+        @keyframes fireworkAnim {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-300px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            padding: 0 2rem;
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.85);
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            animation: fadeInUp 1s ease-out 0.4s backwards;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 4rem;
+            margin-top: 3rem;
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: block;
+            font-family: 'Playfair Display', serif;
+            text-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 0.5rem;
+        }
+
+        /* Sections */
+        .section {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Introduction */
+        .intro-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .intro-text h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .intro-text p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .intro-image {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            transform: perspective(1000px) rotateY(-5deg);
+            transition: transform 0.5s ease;
+        }
+
+        .intro-image:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .intro-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Focus Areas */
+        .focus-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .focus-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .focus-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--red), var(--gold));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .focus-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .focus-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .focus-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--red);
+            opacity: 0.3;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .focus-card h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .focus-card p {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* News Section */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--red) 0%, var(--gold) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .news-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .news-content {
+            padding: 2rem;
+        }
+
+        .news-date {
+            font-size: 0.85rem;
+            color: var(--red);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .news-card h4 {
+            font-size: 1.25rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .news-card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Publications */
+        .publication-list {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .publication-item {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .publication-item:hover {
+            border-left-color: var(--red);
+            box-shadow: 0 8px 30px rgba(220, 38, 38, 0.15);
+            transform: translateX(8px);
+        }
+
+        .pub-title {
+            font-size: 1.1rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .pub-authors {
+            color: var(--gray);
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .pub-venue {
+            color: var(--red);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Members Section */
+        .members-category {
+            margin-bottom: 4rem;
+        }
+
+        .category-title {
+            font-size: 1.75rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--red);
+            display: inline-block;
+        }
+
+        .members-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .member-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            transition: all 0.4s ease;
+            text-align: center;
+        }
+
+        .member-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(220, 38, 38, 0.15);
+        }
+
+        .member-photo {
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, var(--red), var(--gold));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .member-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: white;
+        }
+
+        .member-info {
+            padding: 1.5rem;
+        }
+
+        .member-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .member-position {
+            color: var(--red);
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .member-bio {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .member-interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .interest-tag {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--red);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .member-social {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-link {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            color: var(--gray);
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: var(--red);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-about h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-about p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+        }
+
+        .footer-links h4 {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: var(--gold);
+        }
+
+        .footer-links ul {
+            list-style: none;
+        }
+
+        .footer-links ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--gold);
+        }
+
+        .footer-contact p {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .intro-content {
+                grid-template-columns: 1fr;
+            }
+
+            .focus-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <div class="nav-container" id="navbar">
+        <nav>
+            <a href="#" class="logo">
+                <div class="logo-img">ICN</div>
+                <div class="logo-text">
+                    <strong>ICN Lab</strong>
+                    <span>PTIT RESEARCH</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Trang chủ</a></li>
+                <li><a href="#about">Giới thiệu</a></li>
+                <li><a href="#research">Nghiên cứu</a></li>
+                <li><a href="#news">Tin tức</a></li>
+                <li><a href="#publications">Công bố</a></li>
+                <li><a href="#members">Thành viên</a></li>
+                <li><a href="#contact">Liên hệ</a></li>
+            </ul>
+            <div class="lang-switch">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect fill='%23DA121A' width='60' height='30'/%3E%3Crect fill='%23FFFF00' y='12' width='60' height='6'/%3E%3C/svg%3E" alt="VI" class="lang-btn">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 30'%3E%3Crect fill='%23012169' width='60' height='30'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23fff' stroke-width='6'/%3E%3Cpath d='M0,0 L60,30 M60,0 L0,30' stroke='%23C8102E' stroke-width='4'/%3E%3Cpath d='M30,0 v30 M0,15 h60' stroke='%23fff' stroke-width='10'/%3E%3Cpath d='M30,0 v30 M0,15 h60' stroke='%23C8102E' stroke-width='6'/%3E%3C/svg%3E" alt="EN" class="lang-btn">
+            </div>
+        </nav>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-grid"></div>
+        
+        <!-- Hoa mai/đào trang trí -->
+        <svg class="tet-flower" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="15" fill="#fbbf24" opacity="0.8"/>
+            <circle cx="50" cy="30" r="12" fill="#fbbf24"/>
+            <circle cx="70" cy="50" r="12" fill="#fbbf24"/>
+            <circle cx="50" cy="70" r="12" fill="#fbbf24"/>
+            <circle cx="30" cy="50" r="12" fill="#fbbf24"/>
+            <circle cx="35" cy="35" r="10" fill="#fde047"/>
+            <circle cx="65" cy="35" r="10" fill="#fde047"/>
+            <circle cx="65" cy="65" r="10" fill="#fde047"/>
+            <circle cx="35" cy="65" r="10" fill="#fde047"/>
+        </svg>
+        <svg class="tet-flower" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="15" fill="#fde047" opacity="0.8"/>
+            <circle cx="50" cy="30" r="12" fill="#fbbf24"/>
+            <circle cx="70" cy="50" r="12" fill="#fbbf24"/>
+            <circle cx="50" cy="70" r="12" fill="#fbbf24"/>
+            <circle cx="30" cy="50" r="12" fill="#fbbf24"/>
+            <circle cx="35" cy="35" r="10" fill="#fde047"/>
+            <circle cx="65" cy="35" r="10" fill="#fde047"/>
+            <circle cx="65" cy="65" r="10" fill="#fde047"/>
+            <circle cx="35" cy="65" r="10" fill="#fde047"/>
+        </svg>
+        <svg class="tet-flower" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="15" fill="#fbbf24" opacity="0.8"/>
+            <circle cx="50" cy="30" r="12" fill="#fde047"/>
+            <circle cx="70" cy="50" r="12" fill="#fde047"/>
+            <circle cx="50" cy="70" r="12" fill="#fde047"/>
+            <circle cx="30" cy="50" r="12" fill="#fde047"/>
+        </svg>
+        <svg class="tet-flower" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="15" fill="#fde047" opacity="0.8"/>
+            <circle cx="50" cy="30" r="12" fill="#fbbf24"/>
+            <circle cx="70" cy="50" r="12" fill="#fbbf24"/>
+            <circle cx="50" cy="70" r="12" fill="#fbbf24"/>
+            <circle cx="30" cy="50" r="12" fill="#fbbf24"/>
+        </svg>
+        
+        <div class="hero-content">
+            <h1>Intelligently Connected Networks Lab</h1>
+            <p class="seasonal-text" style="font-size: 1.5rem; color: var(--gold); font-weight: 600; margin-bottom: 1rem; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">🎊 Chúc Mừng Năm Mới Bính Ngọ 2026 🎊</p>
+            <p>Pioneering innovative solutions for next-generation networked systems through Edge Computing, IoT, and 5G/6G Technologies</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Publications</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15+</span>
+                    <span class="stat-label">Active Projects</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">30+</span>
+                    <span class="stat-label">Researchers</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Introduction -->
+    <section class="section" id="about">
+        <div class="intro-content">
+            <div class="intro-text fade-in">
+                <h3>Introduction</h3>
+                <p>The Intelligent Connected Networks Lab strives to cultivate a collaborative research environment dedicated to pioneering innovative solutions for next-generation networked systems, focusing on edge computing, the Internet of Things (IoT), and advanced wireless communication technologies.</p>
+                <p>Our research is structured around three key pillars, addressing critical challenges such as performance, security, and emerging 5G/6G paradigms in resource-constrained environments.</p>
+            </div>
+            <div class="intro-image fade-in">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%231a4d8f'/%3E%3Cstop offset='100%25' style='stop-color:%230ea5e9'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g1)' width='800' height='600'/%3E%3Ccircle cx='400' cy='300' r='150' fill='%23fff' opacity='0.1'/%3E%3Ccircle cx='200' cy='200' r='80' fill='%23fff' opacity='0.15'/%3E%3Ccircle cx='600' cy='400' r='100' fill='%23fff' opacity='0.12'/%3E%3C/svg%3E" alt="Lab Image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Focus Areas -->
+    <section class="section" id="research">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Research Focus</h2>
+            <p class="section-subtitle">Three key pillars driving innovation in next-generation networked systems</p>
+        </div>
+        <div class="focus-grid">
+            <div class="focus-card fade-in">
+                <div class="focus-number">01</div>
+                <h3>Edge Computing Performance Enhancement for IoT</h3>
+                <p>Optimizing TinyML solutions for resource-constrained IoT devices in agriculture and industrial settings through lightweight ML models for microcontrollers, energy-efficient real-time analytics algorithms, and optimized resource allocation between edge and cloud systems.</p>
+            </div>
+            <div class="focus-card fade-in">
+                <div class="focus-number">02</div>
+                <h3>Edge Security for IoT</h3>
+                <p>Creating better security systems, such as AI tools to spot threats in real-time, simple authentication methods for devices with limited resources, and privacy-focused approaches using federated learning and differential privacy.</p>
+            </div>
+            <div class="focus-card fade-in">
+                <div class="focus-number">03</div>
+                <h3>Next-Generation 5G/6G Networks</h3>
+                <p>Pioneering edge-centric innovations through semantic communication frameworks that prioritize meaningful information transmission, integrated sensing and communication (ISAC) systems, and edge-optimized network architectures.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section class="section" id="news">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Latest News</h2>
+            <p class="section-subtitle">Stay updated with our recent activities and announcements</p>
+        </div>
+        <div class="news-grid">
+            <div class="news-card fade-in">
+                <div class="news-image"></div>
+                <div class="news-content">
+                    <div class="news-date">January 29, 2026</div>
+                    <h4>Chúc Mừng Năm Mới Xuân Bính Ngọ 2026</h4>
+                    <p>Lab Mạng Kết Nối Thông Minh xin gửi lời chúc an khang, thịnh vượng và vạn sự như ý tới toàn thể các thầy cô, sinh viên và đối tác.</p>
+                </div>
+            </div>
+            <div class="news-card fade-in">
+                <div class="news-image"></div>
+                <div class="news-content">
+                    <div class="news-date">January 20, 2026</div>
+                    <h4>ICN Lab Spearheads EIDT Conference</h4>
+                    <p>Our lab and global partners lead the way in organizing the prestigious EIDT conference, bringing together researchers worldwide.</p>
+                </div>
+            </div>
+            <div class="news-card fade-in">
+                <div class="news-image"></div>
+                <div class="news-content">
+                    <div class="news-date">January 15, 2026</div>
+                    <h4>Key Roles at ICIT Conference</h4>
+                    <p>Lab members and partners take on significant leadership positions at the International Conference on Information Technology.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Publications -->
+    <section class="section" id="publications">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Recent Publications</h2>
+            <p class="section-subtitle">Our latest contributions to the research community</p>
+        </div>
+        <div class="publication-list">
+            <div class="publication-item fade-in">
+                <div class="pub-title">On Performance Evaluation of Fountain Codes-Based Multicast Scheme in Presence of Multiple Passive Eavesdroppers Over INID Rayleigh Fading Channels</div>
+                <div class="pub-authors">T. D. Dat, T. T. Duy, N. T. Hieu, P. N. An, N. L. Nhat and P. T. Tin</div>
+                <div class="pub-venue">The First International Conference on Communications and Networks, 2025</div>
+            </div>
+            <div class="publication-item fade-in">
+                <div class="pub-title">Đánh Giá Hiệu Năng Mạng Chuyển Tiếp Đa Chặng Bảo Mật Lớp Vật Lý Sử Dụng NOMA Dưới Ảnh Hưởng Của Nhiễu Đồng Kênh</div>
+                <div class="pub-authors">Phạm Xuân Minh, Nguyễn Quang Sang, Từ Lâm Thanh, Trần Trung Duy, Nguyễn Ngọc Lan</div>
+                <div class="pub-venue">Hội nghị Quốc gia về Điện tử, Truyền thông và Công nghệ Thông tin, 2025</div>
+            </div>
+            <div class="publication-item fade-in">
+                <div class="pub-title">Outage Performance of Fountain Codes based Two-way Relaying Scheme Using Digital Network Coding under Hardware Impairments</div>
+                <div class="pub-authors">N. T. Hau, P. M. Nam and T. T. Duy</div>
+                <div class="pub-venue">The 7th International Symposium on Signal Processing Systems (SSPS 2025), May 2025</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Members Section -->
+    <section class="section" id="members">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Our Team</h2>
+            <p class="section-subtitle">Meet the brilliant minds behind ICN Lab's groundbreaking research</p>
+        </div>
+
+        <!-- Team Leaders -->
+        <div class="members-category fade-in">
+            <h3 class="category-title">Leadership</h3>
+            <div class="members-grid" id="leadersGrid">
+                <div class="loading">Loading team members...</div>
+            </div>
+        </div>
+
+        <!-- Faculty -->
+        <div class="members-category fade-in">
+            <h3 class="category-title">Faculty</h3>
+            <div class="members-grid" id="facultyGrid">
+                <div class="loading">Loading faculty...</div>
+            </div>
+        </div>
+
+        <!-- Students -->
+        <div class="members-category fade-in">
+            <h3 class="category-title">Research Students</h3>
+            <div class="members-grid" id="studentsGrid">
+                <div class="loading">Loading students...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3>ICN Lab - PTIT</h3>
+                <p>The Intelligent Connected Networks Lab is committed to addressing interconnected systems' technical and societal challenges through interdisciplinary research.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#about">Giới thiệu</a></li>
+                    <li><a href="#research">Nghiên cứu</a></li>
+                    <li><a href="#news">Tin tức</a></li>
+                    <li><a href="#publications">Công bố</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Liên hệ</h4>
+                <p>📍 Room 06/B15, Posts and Telecommunications Institute of Technology</p>
+                <p>📍 96A Tran Phu, Ha Dong, Ha Noi</p>
+                <p>📞 024-357446799</p>
+                <p>✉️ icnlab@ptit.edu.vn</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Intelligently Connected Networks Lab - PTIT. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+
+    <!-- Theme Configuration -->
+    <script src="theme-config.js"></script>
+    <script src="members.js"></script>
+    <script>
+        // Apply theme on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToApply = AUTO_THEME.enabled ? getAutoTheme() : ACTIVE_PRESET;
+            applyPreset(themeToApply);
+        });
+    </script>
+</body>
+</html>

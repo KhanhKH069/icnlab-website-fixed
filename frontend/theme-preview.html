@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Preview - ICN Lab</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .theme-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .theme-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .theme-preview {
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+        .theme-info {
+            padding: 1.5rem;
+        }
+        .theme-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+        .theme-desc {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+        .apply-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .apply-btn:hover {
+            background: #991b1b;
+        }
+        .current-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #22c55e;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .instructions {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .instructions h2 {
+            margin-bottom: 1rem;
+            color: #dc2626;
+        }
+        .instructions code {
+            background: #f5f5f5;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #dc2626;
+        }
+        .flower-indicator {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(255,255,255,0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 ICN Lab Theme Preview</h1>
+        
+        <div class="instructions">
+            <h2>📝 Hướng dẫn sử dụng:</h2>
+            <ol style="line-height: 2;">
+                <li>Click vào theme bạn muốn dùng</li>
+                <li>Mở file <code>theme-config.js</code></li>
+                <li>Tìm dòng <code>const ACTIVE_PRESET = 'tet';</code></li>
+                <li>Đổi thành theme bạn chọn (ví dụ: <code>'normal'</code>)</li>
+                <li>Lưu file và refresh website chính (F5)</li>
+            </ol>
+        </div>
+
+        <div class="theme-grid">
+            <!-- Theme Tet -->
+            <div class="theme-card" onclick="showThemeCode('tet')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #991b1b 0%, #dc2626 50%, #b91c1c 100%);">
+                    <span class="current-badge" id="badge-tet" style="display: none;">Đang dùng</span>
+                    <span class="flower-indicator">🌸 Có hoa</span>
+                    <div>
+                        Tết Nguyên Đán<br>
+                        <small style="font-size: 1rem;">🎊 2026 🎊</small>
+                    </div>
+                </div>
+                <div class="theme-info">
+                    <div class="theme-name">Tết Bính Ngọ</div>
+                    <div class="theme-desc">Nền đỏ gradient, hoa mai vàng, text chúc mừng năm mới</div>
+                    <button class="apply-btn">Click để xem code</button>
+                </div>
+            </div>
+
+            <!-- Theme Normal -->
+            <div class="theme-card" onclick="showThemeCode('normal')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);">
+                    <span class="current-badge" id="badge-normal" style="display: none;">Đang dùng</span>
+                    <div>
+                        Professional<br>
+                        <small style="font-size: 1rem;">Normal Theme</small>
+                    </div>
+                </div>
+                <div class="theme-info">
+                    <div class="theme-name">Bình thường</div>
+                    <div class="theme-desc">Theme chuyên nghiệp, xanh đen, không seasonal text</div>
+                    <button class="apply-btn">Click để xem code</button>
+                </div>
+            </div>
+
+            <!-- Theme Christmas -->
+            <div class="theme-card" onclick="showThemeCode('christmas')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #166534 0%, #22c55e 50%, #dc2626 100%);">
+                    <span class="current-badge" id="badge-christmas" style="display: none;">Đang dùng</span>
+                    <span class="flower-indicator">🎄 Có trang trí</span>
+                    <div>
+                        Christmas<br>
+                        <small style="font-size: 1rem;">🎅 Giáng Sinh 🎄</small>
+                    </div>
+                </div>
+                <div class="theme-info">
+                    <div class="theme-name">Giáng Sinh</div>
+                    <div class="theme-desc">Xanh lá + đỏ, có hoa trang trí, text Merry Christmas</div>
+                    <button class="apply-btn">Click để xem code</button>
+                </div>
+            </div>
+
+            <!-- Theme National Day -->
+            <div class="theme-card" onclick="showThemeCode('nationalDay')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #dc2626 0%, #fbbf24 100%);">
+                    <span class="current-badge" id="badge-nationalDay" style="display: none;">Đang dùng</span>
+                    <span class="flower-indicator">🌸 Có hoa</span>
+                    <div>
+                        Quốc Khánh<br>
+                        <small style="font-size: 1rem;">🇻🇳 2/9 🇻🇳</small>
+                    </div>
+                </div>
+                <div class="theme-info">
+                    <div class="theme-name">Quốc Khánh 2/9</div>
+                    <div class="theme-desc">Đỏ + vàng (cờ VN), có hoa, text chào mừng Quốc Khánh</div>
+                    <button class="apply-btn">Click để xem code</button>
+                </div>
+            </div>
+
+            <!-- Theme Back to School -->
+            <div class="theme-card" onclick="showThemeCode('backToSchool')">
+                <div class="theme-preview" style="background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);">
+                    <span class="current-badge" id="badge-backToSchool" style="display: none;">Đang dùng</span>
+                    <div>
+                        Khai Giảng<br>
+                        <small style="font-size: 1rem;">📚 Năm Học Mới 📚</small>
+                    </div>
+                </div>
+                <div class="theme-info">
+                    <div class="theme-name">Năm học mới</div>
+                    <div class="theme-desc">Xanh dương, không hoa, text chào mừng năm học mới</div>
+                    <button class="apply-btn">Click để xem code</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showThemeCode(themeName) {
+            const instructions = {
+                'tet': "const ACTIVE_PRESET = 'tet';",
+                'normal': "const ACTIVE_PRESET = 'normal';",
+                'christmas': "const ACTIVE_PRESET = 'christmas';",
+                'nationalDay': "const ACTIVE_PRESET = 'nationalDay';",
+                'backToSchool': "const ACTIVE_PRESET = 'backToSchool';"
+            };
+
+            alert(`✅ Copy dòng này vào theme-config.js:\n\n${instructions[themeName]}\n\nVị trí: Dòng ~150, thay thế dòng const ACTIVE_PRESET hiện tại`);
+        }
+
+        // Highlight current theme (simulate)
+        const currentTheme = 'tet';  // Giả sử đang dùng theme Tết
+        document.getElementById('badge-' + currentTheme).style.display = 'block';
+    </script>
+</body>
+</html>
