@@ -38,6 +38,10 @@ const publicationSchema = new mongoose.Schema({
     pdfFile: {
         type: String
     },
+    image: {
+        type: String,
+        default: null
+    },
     abstract: {
         type: String
     },

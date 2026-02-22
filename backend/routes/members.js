@@ -2,17 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Member = require('../models/Member');
-const { auth, isEditor } = require('../middleware/auth');
+const { auth, isEditor, optionalAuth } = require('../middleware/auth');
 const { upload, setUploadType, handleUploadError } = require('../middleware/upload');
 
 // @route   GET /api/members
-// @desc    Get all members
-// @access  Public
-router.get('/', async (req, res) => {
+// @desc    Get all members (all if auth, active only if public)
+// @access  Public / Private
+router.get('/', optionalAuth, async (req, res) => {
     try {
         const { position, isAlumni } = req.query;
         
-        const query = { isActive: true };
+        const query = req.user ? {} : { isActive: true };
         
         if (position) {
             query.position = position;
@@ -72,6 +72,18 @@ router.post('/',
     auth,
     isEditor,
     setUploadType('members'),
+    (req, res, next) => {
+        if (typeof req.body.researchInterests === 'string') {
+            try {
+                req.body.researchInterests = JSON.parse(req.body.researchInterests);
+            } catch (e) {
+                req.body.researchInterests = req.body.researchInterests.split(',').map(s => s.trim()).filter(Boolean);
+            }
+        }
+        if (req.body.isActive !== undefined) req.body.isActive = ['on','true',true].includes(req.body.isActive);
+        if (req.body.isAlumni !== undefined) req.body.isAlumni = ['on','true',true].includes(req.body.isAlumni);
+        next();
+    },
     upload.single('photo'),
     handleUploadError,
     [
@@ -142,6 +154,18 @@ router.put('/:id',
     auth,
     isEditor,
     setUploadType('members'),
+    (req, res, next) => {
+        if (typeof req.body.researchInterests === 'string') {
+            try {
+                req.body.researchInterests = JSON.parse(req.body.researchInterests);
+            } catch (e) {
+                req.body.researchInterests = req.body.researchInterests.split(',').map(s => s.trim()).filter(Boolean);
+            }
+        }
+        if (req.body.isActive !== undefined) req.body.isActive = ['on','true',true].includes(req.body.isActive);
+        if (req.body.isAlumni !== undefined) req.body.isAlumni = ['on','true',true].includes(req.body.isAlumni);
+        next();
+    },
     upload.single('photo'),
     handleUploadError,
     async (req, res) => {

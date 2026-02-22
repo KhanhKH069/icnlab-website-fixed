@@ -90,6 +90,11 @@ router.post('/',
     auth,
     isEditor,
     setUploadType('news'),
+    (req, res, next) => {
+        if (req.body.isPublished !== undefined) req.body.isPublished = ['on','true',true].includes(req.body.isPublished);
+        if (req.body.tags && typeof req.body.tags === 'string') req.body.tags = req.body.tags.split(',').map(t => t.trim()).filter(Boolean);
+        next();
+    },
     upload.single('image'),
     handleUploadError,
     [
@@ -151,6 +156,11 @@ router.put('/:id',
     auth,
     isEditor,
     setUploadType('news'),
+    (req, res, next) => {
+        if (req.body.isPublished !== undefined) req.body.isPublished = ['on','true',true].includes(req.body.isPublished);
+        if (req.body.tags && typeof req.body.tags === 'string') req.body.tags = req.body.tags.split(',').map(t => t.trim()).filter(Boolean);
+        next();
+    },
     upload.single('image'),
     handleUploadError,
     async (req, res) => {

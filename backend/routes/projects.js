@@ -2,17 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Project = require('../models/Project');
-const { auth, isEditor } = require('../middleware/auth');
+const { auth, isEditor, optionalAuth } = require('../middleware/auth');
 const { upload, setUploadType, handleUploadError } = require('../middleware/upload');
 
 // @route   GET /api/projects
-// @desc    Get all projects
-// @access  Public
-router.get('/', async (req, res) => {
+// @desc    Get all projects (all if auth, published only if public)
+// @access  Public / Private
+router.get('/', optionalAuth, async (req, res) => {
     try {
         const { status, category } = req.query;
         
-        const query = { isPublished: true };
+        const query = req.user ? {} : { isPublished: true };
         
         if (status) {
             query.status = status;
@@ -76,6 +76,10 @@ router.post('/',
     auth,
     isEditor,
     setUploadType('projects'),
+    (req, res, next) => {
+        if (req.body.isPublished !== undefined) req.body.isPublished = ['on','true',true].includes(req.body.isPublished);
+        next();
+    },
     upload.single('image'),
     handleUploadError,
     [
@@ -145,6 +149,10 @@ router.put('/:id',
     auth,
     isEditor,
     setUploadType('projects'),
+    (req, res, next) => {
+        if (req.body.isPublished !== undefined) req.body.isPublished = ['on','true',true].includes(req.body.isPublished);
+        next();
+    },
     upload.single('image'),
     handleUploadError,
     async (req, res) => {

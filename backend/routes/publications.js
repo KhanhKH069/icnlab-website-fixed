@@ -85,11 +85,17 @@ router.post('/',
     auth,
     isEditor,
     setUploadType('publications'),
-    upload.single('pdfFile'),
+    (req, res, next) => {
+        if (typeof req.body.authors === 'string') {
+            req.body.authors = req.body.authors.split('\n').map(a => a.trim()).filter(Boolean);
+        }
+        next();
+    },
+    upload.fields([{ name: 'pdfFile', maxCount: 1 }, { name: 'image', maxCount: 1 }]),
     handleUploadError,
     [
         body('title').trim().notEmpty(),
-        body('authors').isArray({ min: 1 }),
+        body('authors').custom(v => Array.isArray(v) && v.length > 0).withMessage('At least one author required'),
         body('venue').trim().notEmpty(),
         body('year').isInt({ min: 2000, max: 2100 }),
         body('type').isIn(['conference', 'journal', 'workshop', 'book_chapter', 'thesis'])
@@ -118,8 +124,11 @@ router.post('/',
                 isPublished: req.body.isPublished !== undefined ? req.body.isPublished : true
             };
 
-            if (req.file) {
-                publicationData.pdfFile = `/uploads/publications/${req.file.filename}`;
+            if (req.files?.pdfFile?.[0]) {
+                publicationData.pdfFile = `/uploads/publications/${req.files.pdfFile[0].filename}`;
+            }
+            if (req.files?.image?.[0]) {
+                publicationData.image = `/uploads/publications/${req.files.image[0].filename}`;
             }
 
             const publication = new Publication(publicationData);
@@ -147,7 +156,13 @@ router.put('/:id',
     auth,
     isEditor,
     setUploadType('publications'),
-    upload.single('pdfFile'),
+    (req, res, next) => {
+        if (typeof req.body.authors === 'string') {
+            req.body.authors = req.body.authors.split('\n').map(a => a.trim()).filter(Boolean);
+        }
+        next();
+    },
+    upload.fields([{ name: 'pdfFile', maxCount: 1 }, { name: 'image', maxCount: 1 }]),
     handleUploadError,
     async (req, res) => {
         try {
@@ -166,14 +181,19 @@ router.put('/:id',
                 if (req.body[field] !== undefined) {
                     if (field === 'keywords' && typeof req.body[field] === 'string') {
                         publication[field] = req.body[field].split(',').map(k => k.trim());
-                    } else {
+                    } else if (field === 'authors' && Array.isArray(req.body[field])) {
+                        publication[field] = req.body[field];
+                    } else if (field !== 'authors') {
                         publication[field] = req.body[field];
                     }
                 }
             });
 
-            if (req.file) {
-                publication.pdfFile = `/uploads/publications/${req.file.filename}`;
+            if (req.files?.pdfFile?.[0]) {
+                publication.pdfFile = `/uploads/publications/${req.files.pdfFile[0].filename}`;
+            }
+            if (req.files?.image?.[0]) {
+                publication.image = `/uploads/publications/${req.files.image[0].filename}`;
             }
 
             await publication.save();

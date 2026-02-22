@@ -196,6 +196,12 @@ function openNewsModal(id = null) {
                 </select>
             </div>
             <div class="form-group">
+                <label>Image (cover)</label>
+                <input type="file" name="image" id="news-image" accept="image/jpeg,image/png,image/gif">
+                <div id="news-current-image"></div>
+                <small style="color: var(--gray); font-size: 0.85rem;">JPG, PNG, GIF. Max 5MB</small>
+            </div>
+            <div class="form-group">
                 <label>Content *</label>
                 <textarea name="content" required id="news-content"></textarea>
             </div>
@@ -244,6 +250,10 @@ async function loadNewsData(id) {
         document.getElementById('news-tags').value = news.tags?.join(', ') || '';
         document.getElementById('news-date').value = new Date(news.publishedDate).toISOString().split('T')[0];
         document.getElementById('news-published').checked = news.isPublished;
+        if (news.image) {
+            const imgWrap = document.getElementById('news-current-image');
+            if (imgWrap) imgWrap.innerHTML = `<p style="margin-top:0.5rem;">Ảnh hiện tại: <a href="${API_BASE_URL.replace('/api','')}${news.image}" target="_blank">Xem</a></p>`;
+        }
     } catch (error) {
         alert('Error loading news data');
         closeModal();
@@ -255,26 +265,19 @@ async function saveNews(event, id) {
     const form = event.target;
     const formData = new FormData(form);
 
-    const data = {
-        title: formData.get('title'),
-        category: formData.get('category'),
-        content: formData.get('content'),
-        excerpt: formData.get('excerpt'),
-        tags: formData.get('tags') ? formData.get('tags').split(',').map(t => t.trim()) : [],
-        publishedDate: formData.get('publishedDate'),
-        isPublished: formData.get('isPublished') === 'on'
-    };
+    formData.set('tags', formData.get('tags') ? formData.get('tags').split(',').map(t => t.trim()).filter(Boolean).join(',') : '');
+    if (!formData.get('image')?.size) formData.delete('image');
 
     try {
         if (id && id !== 'null') {
             await apiRequest(`/news/${id}`, {
                 method: 'PUT',
-                body: JSON.stringify(data)
+                body: formData
             });
         } else {
             await apiRequest('/news', {
                 method: 'POST',
-                body: JSON.stringify(data)
+                body: formData
             });
         }
 
@@ -397,6 +400,16 @@ function openPublicationModal(id = null) {
                 <label>URL</label>
                 <input type="url" name="url" id="pub-url">
             </div>
+            <div class="form-group">
+                <label>PDF File</label>
+                <input type="file" name="pdfFile" id="pub-pdf" accept=".pdf">
+                <small style="color: var(--gray); font-size: 0.85rem;">File PDF. Max 5MB</small>
+            </div>
+            <div class="form-group">
+                <label>Image (cover/thumbnail)</label>
+                <input type="file" name="image" id="pub-image" accept="image/jpeg,image/png,image/gif">
+                <small style="color: var(--gray); font-size: 0.85rem;">JPG, PNG, GIF. Max 5MB</small>
+            </div>
             <div class="form-actions">
                 <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
                 <button type="submit" class="btn-primary">Save</button>
@@ -436,26 +449,19 @@ async function savePublication(event, id) {
     const form = event.target;
     const formData = new FormData(form);
 
-    const data = {
-        title: formData.get('title'),
-        authors: formData.get('authors').split('\n').map(a => a.trim()).filter(a => a),
-        venue: formData.get('venue'),
-        year: parseInt(formData.get('year')),
-        type: formData.get('type'),
-        doi: formData.get('doi'),
-        url: formData.get('url')
-    };
+    if (!formData.get('pdfFile')?.size) formData.delete('pdfFile');
+    if (!formData.get('image')?.size) formData.delete('image');
 
     try {
         if (id && id !== 'null') {
             await apiRequest(`/publications/${id}`, {
                 method: 'PUT',
-                body: JSON.stringify(data)
+                body: formData
             });
         } else {
             await apiRequest('/publications', {
                 method: 'POST',
-                body: JSON.stringify(data)
+                body: formData
             });
         }
 
@@ -483,27 +489,379 @@ function editPublication(id) {
     openPublicationModal(id);
 }
 
-// Similar functions for Projects and Members would follow the same pattern...
-// For brevity, I'm showing the structure
-
+// ===== PROJECTS MANAGEMENT =====
 async function loadProjects() {
     const container = document.getElementById('projectsContent');
     container.innerHTML = '<div class="loading">Loading projects...</div>';
-    // Implementation similar to loadNews
-}
 
-async function loadMembers() {
-    const container = document.getElementById('membersContent');
-    container.innerHTML = '<div class="loading">Loading members...</div>';
-    // Implementation similar to loadNews
+    try {
+        const response = await apiRequest('/projects');
+        const projects = response.data || [];
+
+        if (projects.length === 0) {
+            container.innerHTML = '<div class="empty-state"><p>No projects found. Click "Add Project" to create one.</p></div>';
+            return;
+        }
+
+        const table = `
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Status</th>
+                        <th>Start Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${projects.map(item => `
+                        <tr>
+                            <td>${item.title}</td>
+                            <td>${(item.category || '').replace(/_/g, ' ')}</td>
+                            <td>${item.status || 'ongoing'}</td>
+                            <td>${item.startDate ? new Date(item.startDate).toLocaleDateString() : '-'}</td>
+                            <td>
+                                <button class="action-btn btn-edit" onclick="editProject('${item._id}')">Edit</button>
+                                <button class="action-btn btn-delete" onclick="deleteProject('${item._id}')">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+        container.innerHTML = table;
+    } catch (error) {
+        container.innerHTML = '<div class="empty-state">Error loading projects. Check if Backend is running.</div>';
+    }
 }
 
 function openProjectModal(id = null) {
-    // Similar to openNewsModal
+    const modal = document.getElementById('modal');
+    const isEdit = id !== null;
+    const today = new Date().toISOString().split('T')[0];
+
+    const modalContent = `
+        <div class="modal-header">
+            <h2>${isEdit ? 'Edit' : 'Add'} Project</h2>
+            <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+        <form id="projectForm" onsubmit="saveProject(event, '${id}')">
+            <div class="form-group">
+                <label>Title *</label>
+                <input type="text" name="title" required id="project-title">
+            </div>
+            <div class="form-group">
+                <label>Description *</label>
+                <textarea name="description" required id="project-description" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Category *</label>
+                <select name="category" required id="project-category">
+                    <option value="edge_computing">Edge Computing</option>
+                    <option value="iot_security">IoT Security</option>
+                    <option value="5g_6g">5G/6G</option>
+                    <option value="ai_ml">AI/ML</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Status *</label>
+                <select name="status" required id="project-status">
+                    <option value="ongoing">Ongoing</option>
+                    <option value="completed">Completed</option>
+                    <option value="planned">Planned</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Image</label>
+                <input type="file" name="image" id="project-image" accept="image/jpeg,image/png,image/gif">
+                <small style="color: var(--gray); font-size: 0.85rem;">JPG, PNG, GIF. Max 5MB</small>
+            </div>
+            <div class="form-group">
+                <label>Start Date *</label>
+                <input type="date" name="startDate" required id="project-startDate" value="${today}">
+            </div>
+            <div class="form-group">
+                <label>End Date</label>
+                <input type="date" name="endDate" id="project-endDate">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="isPublished" id="project-published" checked> Published
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-primary">Save</button>
+            </div>
+        </form>
+    `;
+
+    document.getElementById('modalContent').innerHTML = modalContent;
+
+    if (isEdit) {
+        loadProjectData(id);
+    }
+
+    modal.classList.add('show');
+}
+
+async function loadProjectData(id) {
+    try {
+        const response = await apiRequest(`/projects/${id}`);
+        const p = response.data;
+
+        document.getElementById('project-title').value = p.title || '';
+        document.getElementById('project-description').value = p.description || '';
+        document.getElementById('project-category').value = p.category || 'other';
+        document.getElementById('project-status').value = p.status || 'ongoing';
+        document.getElementById('project-startDate').value = p.startDate ? new Date(p.startDate).toISOString().split('T')[0] : '';
+        document.getElementById('project-endDate').value = p.endDate ? new Date(p.endDate).toISOString().split('T')[0] : '';
+        document.getElementById('project-published').checked = p.isPublished !== false;
+    } catch (error) {
+        alert('Error loading project data');
+        closeModal();
+    }
+}
+
+async function saveProject(event, id) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+
+    if (!formData.get('image')?.size) formData.delete('image');
+
+    try {
+        if (id && id !== 'null') {
+            await apiRequest(`/projects/${id}`, {
+                method: 'PUT',
+                body: formData
+            });
+        } else {
+            await apiRequest('/projects', {
+                method: 'POST',
+                body: formData
+            });
+        }
+
+        closeModal();
+        loadProjects();
+        loadDashboardStats();
+        alert('Project saved successfully!');
+    } catch (error) {
+        alert(error.message || 'Error saving project');
+    }
+}
+
+async function deleteProject(id) {
+    if (!confirm('Are you sure you want to delete this project?')) return;
+
+    try {
+        await apiRequest(`/projects/${id}`, { method: 'DELETE' });
+        loadProjects();
+        loadDashboardStats();
+        alert('Project deleted successfully!');
+    } catch (error) {
+        alert('Error deleting project');
+    }
+}
+
+function editProject(id) {
+    openProjectModal(id);
+}
+
+// ===== MEMBERS MANAGEMENT =====
+async function loadMembers() {
+    const container = document.getElementById('membersContent');
+    container.innerHTML = '<div class="loading">Loading members...</div>';
+
+    try {
+        const response = await apiRequest('/members');
+        const members = response.data || [];
+
+        if (members.length === 0) {
+            container.innerHTML = '<div class="empty-state"><p>No members found. Click "Add Member" to create one.</p></div>';
+            return;
+        }
+
+        const positionLabels = {
+            professor: 'Professor', associate_professor: 'Assoc. Prof.',
+            assistant_professor: 'Asst. Prof.', postdoc: 'Postdoc',
+            phd_student: 'PhD Student', master_student: 'Master Student',
+            undergraduate: 'Undergraduate', research_assistant: 'Research Assistant',
+            collaborator: 'Collaborator'
+        };
+
+        const table = `
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Position</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${members.map(item => `
+                        <tr>
+                            <td>${item.name}</td>
+                            <td>${item.email}</td>
+                            <td>${positionLabels[item.position] || item.position}</td>
+                            <td>
+                                <button class="action-btn btn-edit" onclick="editMember('${item._id}')">Edit</button>
+                                <button class="action-btn btn-delete" onclick="deleteMember('${item._id}')">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+        container.innerHTML = table;
+    } catch (error) {
+        container.innerHTML = '<div class="empty-state">Error loading members. Check if Backend is running.</div>';
+    }
 }
 
 function openMemberModal(id = null) {
-    // Similar to openNewsModal
+    const modal = document.getElementById('modal');
+    const isEdit = id !== null;
+
+    const modalContent = `
+        <div class="modal-header">
+            <h2>${isEdit ? 'Edit' : 'Add'} Member</h2>
+            <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+        <form id="memberForm" onsubmit="saveMember(event, '${id}')">
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" name="name" required id="member-name">
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" name="email" required id="member-email">
+            </div>
+            <div class="form-group">
+                <label>Position *</label>
+                <select name="position" required id="member-position">
+                    <option value="professor">Professor</option>
+                    <option value="associate_professor">Associate Professor</option>
+                    <option value="assistant_professor">Assistant Professor</option>
+                    <option value="postdoc">Postdoc</option>
+                    <option value="phd_student">PhD Student</option>
+                    <option value="master_student">Master Student</option>
+                    <option value="undergraduate">Undergraduate</option>
+                    <option value="research_assistant">Research Assistant</option>
+                    <option value="collaborator">Collaborator</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Bio</label>
+                <textarea name="bio" id="member-bio" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Photo</label>
+                <input type="file" name="photo" id="member-photo" accept="image/jpeg,image/png,image/gif">
+                <small style="color: var(--gray); font-size: 0.85rem;">JPG, PNG, GIF. Max 5MB</small>
+            </div>
+            <div class="form-group">
+                <label>Research Interests (comma separated)</label>
+                <input type="text" name="researchInterests" id="member-interests" placeholder="IoT, 5G, Security">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="isActive" id="member-active" checked> Active
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" name="isAlumni" id="member-alumni"> Alumni
+                </label>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-primary">Save</button>
+            </div>
+        </form>
+    `;
+
+    document.getElementById('modalContent').innerHTML = modalContent;
+
+    if (isEdit) {
+        loadMemberData(id);
+    }
+
+    modal.classList.add('show');
+}
+
+async function loadMemberData(id) {
+    try {
+        const response = await apiRequest(`/members/${id}`);
+        const m = response.data;
+
+        document.getElementById('member-name').value = m.name || '';
+        document.getElementById('member-email').value = m.email || '';
+        document.getElementById('member-position').value = m.position || 'undergraduate';
+        document.getElementById('member-bio').value = m.bio || '';
+        document.getElementById('member-interests').value = (m.researchInterests || []).join(', ');
+        document.getElementById('member-active').checked = m.isActive !== false;
+        document.getElementById('member-alumni').checked = m.isAlumni === true;
+    } catch (error) {
+        alert('Error loading member data');
+        closeModal();
+    }
+}
+
+async function saveMember(event, id) {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+
+    const interests = form.researchInterests.value
+        ? form.researchInterests.value.split(',').map(s => s.trim()).filter(Boolean)
+        : [];
+    formData.set('researchInterests', JSON.stringify(interests));
+
+    if (!formData.get('photo')?.size) formData.delete('photo');
+
+    try {
+        if (id && id !== 'null') {
+            await apiRequest(`/members/${id}`, {
+                method: 'PUT',
+                body: formData
+            });
+        } else {
+            await apiRequest('/members', {
+                method: 'POST',
+                body: formData
+            });
+        }
+
+        closeModal();
+        loadMembers();
+        loadDashboardStats();
+        alert('Member saved successfully!');
+    } catch (error) {
+        alert(error.message || 'Error saving member');
+    }
+}
+
+async function deleteMember(id) {
+    if (!confirm('Are you sure you want to delete this member?')) return;
+
+    try {
+        await apiRequest(`/members/${id}`, { method: 'DELETE' });
+        loadMembers();
+        loadDashboardStats();
+        alert('Member deleted successfully!');
+    } catch (error) {
+        alert('Error deleting member');
+    }
+}
+
+function editMember(id) {
+    openMemberModal(id);
 }
 
 // Modal functions

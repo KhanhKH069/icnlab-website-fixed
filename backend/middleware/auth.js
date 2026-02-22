@@ -46,6 +46,19 @@ exports.auth = async (req, res, next) => {
     }
 };
 
+// Optional auth - sets req.user if token valid, otherwise continues
+exports.optionalAuth = async (req, res, next) => {
+    try {
+        const token = req.header('Authorization')?.replace('Bearer ', '');
+        if (!token) return next();
+
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded.id).select('-password');
+        if (user && user.isActive) req.user = user;
+    } catch (e) { /* ignore */ }
+    next();
+};
+
 // Check if user is admin
 exports.isAdmin = (req, res, next) => {
     if (req.user.role !== 'admin') {
