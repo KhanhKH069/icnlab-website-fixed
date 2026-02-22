@@ -301,7 +301,10 @@
                 window.location.href = 'index.html';
 
             } catch (error) {
-                showError(error.message);
+                const msg = (error.message === 'Failed to fetch' || error.name === 'TypeError')
+                    ? 'Không thể kết nối đến server. Vui lòng chạy Backend (port 5000) và kiểm tra MongoDB.'
+                    : error.message;
+                showError(msg);
             } finally {
                 loginBtn.disabled = false;
                 loginBtn.textContent = 'Login';

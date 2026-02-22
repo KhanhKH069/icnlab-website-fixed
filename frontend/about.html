@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giới thiệu | ICN Lab - PTIT</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="nav-container" id="navbar">
+        <nav>
+            <a href="index.html" class="logo">
+                <div class="logo-img">ICN</div>
+                <div class="logo-text">
+                    <strong>ICN Lab</strong>
+                    <span>PTIT Research</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Trang chủ</a></li>
+                <li><a href="about.html" class="active">Giới thiệu</a></li>
+                <li><a href="research.html">Nghiên cứu</a></li>
+                <li><a href="projects.html">Dự án</a></li>
+                <li><a href="publications.html">Công bố</a></li>
+                <li><a href="members.html">Thành viên</a></li>
+                <li><a href="contact.html">Liên hệ</a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        </nav>
+    </div>
+
+    <header class="page-header">
+        <h1>Giới thiệu</h1>
+        <p>Intelligently Connected Networks Lab</p>
+    </header>
+
+    <section class="section">
+        <div class="intro-content">
+            <div class="intro-text fade-in">
+                <h2>Về chúng tôi</h2>
+                <p>Intelligently Connected Networks Lab (ICN Lab) thuộc Học viện Công nghệ Bưu chính Viễn thông (PTIT), tập trung vào nghiên cứu các giải pháp tiên tiến cho hệ thống mạng thế hệ mới.</p>
+                <p>Chúng tôi xây dựng môi trường nghiên cứu hợp tác, hướng tới các đổi mới trong Edge Computing, Internet of Things (IoT) và công nghệ truyền thông không dây thế hệ 5G/6G.</p>
+                <p>Nghiên cứu của lab được tổ chức theo ba trụ cột chính: tối ưu hiệu năng, bảo mật, và các mô hình mới cho mạng thế hệ tiếp theo trong môi trường hạn chế tài nguyên.</p>
+            </div>
+            <div class="intro-image fade-in">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'%3E%3Cdefs%3E%3ClinearGradient id='g1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%230f172a'/%3E%3Cstop offset='100%25' style='stop-color:%231e3a5f'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill='url(%23g1)' width='800' height='600'/%3E%3Ccircle cx='400' cy='300' r='150' fill='%23fff' opacity='0.08'/%3E%3Ccircle cx='200' cy='200' r='80' fill='%23fff' opacity='0.1'/%3E%3Ccircle cx='600' cy='400' r='100' fill='%23fff' opacity='0.06'/%3E%3C/svg%3E" alt="ICN Lab">
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-header fade-in">
+            <h2 class="section-title">Tầm nhìn</h2>
+            <p class="section-subtitle">Định hướng phát triển và đóng góp</p>
+        </div>
+        <div class="focus-grid">
+            <div class="focus-card fade-in">
+                <div class="focus-number">01</div>
+                <h3>Nghiên cứu chất lượng cao</h3>
+                <p>Công bố các bài báo trên tạp chí và hội nghị quốc tế uy tín, góp phần thúc đẩy khoa học và công nghệ mạng.</p>
+            </div>
+            <div class="focus-card fade-in">
+                <div class="focus-number">02</div>
+                <h3>Hợp tác quốc tế</h3>
+                <p>Liên kết với các trường đại học, viện nghiên cứu và doanh nghiệp trong và ngoài nước.</p>
+            </div>
+            <div class="focus-card fade-in">
+                <div class="focus-number">03</div>
+                <h3>Đào tạo nguồn nhân lực</h3>
+                <p>Đào tạo sinh viên, học viên cao học và nghiên cứu sinh trong lĩnh vực mạng và truyền thông.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about">
+                <h3>ICN Lab - PTIT</h3>
+                <p>Intelligently Connected Networks Lab – nghiên cứu các giải pháp cho hệ thống mạng thế hệ mới.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Liên kết</h4>
+                <ul>
+                    <li><a href="about.html">Giới thiệu</a></li>
+                    <li><a href="research.html">Nghiên cứu</a></li>
+                    <li><a href="projects.html">Dự án</a></li>
+                    <li><a href="publications.html">Công bố</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Liên hệ</h4>
+                <p>📍 Phòng 06/B15, PTIT</p>
+                <p>📍 96A Trần Phú, Hà Đông, Hà Nội</p>
+                <p>✉️ icnlab@ptit.edu.vn</p>
+            </div>
+        </div>
+        <div class="footer-bottom"><p>© 2026 ICN Lab - PTIT</p></div>
+    </footer>
+
+    <script>
+        document.getElementById('menuToggle')?.addEventListener('click', () => document.querySelector('.nav-links')?.classList.toggle('open'));
+        window.addEventListener('scroll', () => document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 50));
+        const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    </script>
+</body>
+</html>

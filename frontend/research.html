@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nghiên cứu | ICN Lab - PTIT</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="nav-container" id="navbar">
+        <nav>
+            <a href="index.html" class="logo">
+                <div class="logo-img">ICN</div>
+                <div class="logo-text"><strong>ICN Lab</strong><span>PTIT Research</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Trang chủ</a></li>
+                <li><a href="about.html">Giới thiệu</a></li>
+                <li><a href="research.html" class="active">Nghiên cứu</a></li>
+                <li><a href="projects.html">Dự án</a></li>
+                <li><a href="publications.html">Công bố</a></li>
+                <li><a href="members.html">Thành viên</a></li>
+                <li><a href="contact.html">Liên hệ</a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        </nav>
+    </div>
+
+    <header class="page-header">
+        <h1>Hướng nghiên cứu</h1>
+        <p>Ba trụ cột chính thúc đẩy đổi mới trong hệ thống mạng thế hệ mới</p>
+    </header>
+
+    <section class="section">
+        <div class="focus-grid">
+            <div class="focus-card fade-in">
+                <div class="focus-number">01</div>
+                <h3>Edge Computing & IoT Performance</h3>
+                <p>Tối ưu hóa TinyML cho thiết bị IoT hạn chế tài nguyên trong nông nghiệp và công nghiệp: mô hình ML nhẹ cho vi điều khiển, thuật toán phân tích thời gian thực tiết kiệm năng lượng, và phân bổ tài nguyên tối ưu giữa edge và cloud.</p>
+            </div>
+            <div class="focus-card fade-in">
+                <div class="focus-number">02</div>
+                <h3>Edge Security for IoT</h3>
+                <p>Xây dựng hệ thống bảo mật tốt hơn: công cụ AI phát hiện mối đe dọa thời gian thực, phương thức xác thực đơn giản cho thiết bị hạn chế tài nguyên, và phương pháp bảo vệ quyền riêng tư sử dụng federated learning và differential privacy.</p>
+            </div>
+            <div class="focus-card fade-in">
+                <div class="focus-number">03</div>
+                <h3>5G/6G Networks</h3>
+                <p>Nghiên cứu đổi mới hướng edge: khung truyền thông ngữ nghĩa ưu tiên truyền thông tin có ý nghĩa, hệ thống ISAC (Integrated Sensing and Communication), và kiến trúc mạng tối ưu cho edge.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about"><h3>ICN Lab - PTIT</h3><p>Intelligently Connected Networks Lab – nghiên cứu các giải pháp cho hệ thống mạng thế hệ mới.</p></div>
+            <div class="footer-links"><h4>Liên kết</h4><ul><li><a href="about.html">Giới thiệu</a></li><li><a href="research.html">Nghiên cứu</a></li><li><a href="projects.html">Dự án</a></li><li><a href="publications.html">Công bố</a></li></ul></div>
+            <div class="footer-contact"><h4>Liên hệ</h4><p>📍 Phòng 06/B15, PTIT</p><p>✉️ icnlab@ptit.edu.vn</p></div>
+        </div>
+        <div class="footer-bottom"><p>© 2026 ICN Lab - PTIT</p></div>
+    </footer>
+
+    <script>
+        document.getElementById('menuToggle')?.addEventListener('click', () => document.querySelector('.nav-links')?.classList.toggle('open'));
+        window.addEventListener('scroll', () => document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 50));
+        const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    </script>
+</body>
+</html>

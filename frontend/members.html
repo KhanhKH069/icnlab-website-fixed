@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thành viên | ICN Lab - PTIT</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="nav-container" id="navbar">
+        <nav>
+            <a href="index.html" class="logo">
+                <div class="logo-img">ICN</div>
+                <div class="logo-text"><strong>ICN Lab</strong><span>PTIT Research</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Trang chủ</a></li>
+                <li><a href="about.html">Giới thiệu</a></li>
+                <li><a href="research.html">Nghiên cứu</a></li>
+                <li><a href="projects.html">Dự án</a></li>
+                <li><a href="publications.html">Công bố</a></li>
+                <li><a href="members.html" class="active">Thành viên</a></li>
+                <li><a href="contact.html">Liên hệ</a></li>
+            </ul>
+            <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        </nav>
+    </div>
+
+    <header class="page-header">
+        <h1>Đội ngũ nghiên cứu</h1>
+        <p>Gặp gỡ các thành viên của ICN Lab</p>
+    </header>
+
+    <section class="section">
+        <div class="members-category fade-in">
+            <h3 class="category-title">Lãnh đạo</h3>
+            <div class="members-grid" id="leadersGrid"><div class="loading">Đang tải...</div></div>
+        </div>
+        <div class="members-category fade-in">
+            <h3 class="category-title">Giảng viên</h3>
+            <div class="members-grid" id="facultyGrid"><div class="loading">Đang tải...</div></div>
+        </div>
+        <div class="members-category fade-in">
+            <h3 class="category-title">Nghiên cứu sinh & Sinh viên</h3>
+            <div class="members-grid" id="studentsGrid"><div class="loading">Đang tải...</div></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-about"><h3>ICN Lab - PTIT</h3><p>Intelligently Connected Networks Lab – nghiên cứu các giải pháp cho hệ thống mạng thế hệ mới.</p></div>
+            <div class="footer-links"><h4>Liên kết</h4><ul><li><a href="about.html">Giới thiệu</a></li><li><a href="research.html">Nghiên cứu</a></li><li><a href="projects.html">Dự án</a></li><li><a href="publications.html">Công bố</a></li></ul></div>
+            <div class="footer-contact"><h4>Liên hệ</h4><p>📍 Phòng 06/B15, PTIT</p><p>✉️ icnlab@ptit.edu.vn</p></div>
+        </div>
+        <div class="footer-bottom"><p>© 2026 ICN Lab - PTIT</p></div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script src="members.js"></script>
+    <script>
+        document.getElementById('menuToggle')?.addEventListener('click', () => document.querySelector('.nav-links')?.classList.toggle('open'));
+        window.addEventListener('scroll', () => document.getElementById('navbar')?.classList.toggle('scrolled', window.scrollY > 50));
+        const obs = new IntersectionObserver(entries => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    </script>
+</body>
+</html>

@@ -17,9 +17,18 @@ const memberRoutes = require('./routes/members');
 
 const app = express();
 
-// Middleware
+// Middleware - CORS: allow Frontend (3000) and Admin (3001)
+const corsOriginEnv = process.env.CORS_ORIGIN || 'http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001';
+const corsOrigins = corsOriginEnv.split(',').map(o => o.trim());
+const allowAll = corsOrigins.includes('*');
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || '*',
+    origin: (origin, callback) => {
+        if (allowAll || !origin || corsOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true
 }));
 app.use(express.json());
