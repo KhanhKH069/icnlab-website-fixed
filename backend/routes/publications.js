@@ -85,19 +85,19 @@ router.post('/',
     auth,
     isEditor,
     setUploadType('publications'),
+    upload.fields([{ name: 'pdfFile', maxCount: 1 }, { name: 'image', maxCount: 1 }]),
     (req, res, next) => {
-        if (typeof req.body.authors === 'string') {
+        if (req.body && typeof req.body.authors === 'string') {
             req.body.authors = req.body.authors.split('\n').map(a => a.trim()).filter(Boolean);
         }
         next();
     },
-    upload.fields([{ name: 'pdfFile', maxCount: 1 }, { name: 'image', maxCount: 1 }]),
     handleUploadError,
     [
         body('title').trim().notEmpty(),
         body('authors').custom(v => Array.isArray(v) && v.length > 0).withMessage('At least one author required'),
         body('venue').trim().notEmpty(),
-        body('year').isInt({ min: 2000, max: 2100 }),
+        body('year').custom((v) => { const n = parseInt(v, 10); return !isNaN(n) && n >= 2000 && n <= 2100; }).withMessage('Year must be 2000-2100'),
         body('type').isIn(['conference', 'journal', 'workshop', 'book_chapter', 'thesis'])
     ],
     async (req, res) => {
@@ -156,13 +156,13 @@ router.put('/:id',
     auth,
     isEditor,
     setUploadType('publications'),
+    upload.fields([{ name: 'pdfFile', maxCount: 1 }, { name: 'image', maxCount: 1 }]),
     (req, res, next) => {
-        if (typeof req.body.authors === 'string') {
+        if (req.body && typeof req.body.authors === 'string') {
             req.body.authors = req.body.authors.split('\n').map(a => a.trim()).filter(Boolean);
         }
         next();
     },
-    upload.fields([{ name: 'pdfFile', maxCount: 1 }, { name: 'image', maxCount: 1 }]),
     handleUploadError,
     async (req, res) => {
         try {

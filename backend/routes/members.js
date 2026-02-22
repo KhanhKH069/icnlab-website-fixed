@@ -72,19 +72,21 @@ router.post('/',
     auth,
     isEditor,
     setUploadType('members'),
+    upload.single('photo'),
     (req, res, next) => {
-        if (typeof req.body.researchInterests === 'string') {
-            try {
-                req.body.researchInterests = JSON.parse(req.body.researchInterests);
-            } catch (e) {
-                req.body.researchInterests = req.body.researchInterests.split(',').map(s => s.trim()).filter(Boolean);
+        if (req.body) {
+            if (typeof req.body.researchInterests === 'string') {
+                try {
+                    req.body.researchInterests = JSON.parse(req.body.researchInterests);
+                } catch (e) {
+                    req.body.researchInterests = req.body.researchInterests.split(',').map(s => s.trim()).filter(Boolean);
+                }
             }
+            if (req.body.isActive !== undefined) req.body.isActive = ['on','true',true].includes(req.body.isActive);
+            if (req.body.isAlumni !== undefined) req.body.isAlumni = ['on','true',true].includes(req.body.isAlumni);
         }
-        if (req.body.isActive !== undefined) req.body.isActive = ['on','true',true].includes(req.body.isActive);
-        if (req.body.isAlumni !== undefined) req.body.isAlumni = ['on','true',true].includes(req.body.isAlumni);
         next();
     },
-    upload.single('photo'),
     handleUploadError,
     [
         body('name').trim().notEmpty(),
@@ -154,19 +156,21 @@ router.put('/:id',
     auth,
     isEditor,
     setUploadType('members'),
+    upload.single('photo'),
     (req, res, next) => {
-        if (typeof req.body.researchInterests === 'string') {
-            try {
-                req.body.researchInterests = JSON.parse(req.body.researchInterests);
-            } catch (e) {
-                req.body.researchInterests = req.body.researchInterests.split(',').map(s => s.trim()).filter(Boolean);
+        if (req.body) {
+            if (typeof req.body.researchInterests === 'string') {
+                try {
+                    req.body.researchInterests = JSON.parse(req.body.researchInterests);
+                } catch (e) {
+                    req.body.researchInterests = req.body.researchInterests.split(',').map(s => s.trim()).filter(Boolean);
+                }
             }
+            if (req.body.isActive !== undefined) req.body.isActive = ['on','true',true].includes(req.body.isActive);
+            if (req.body.isAlumni !== undefined) req.body.isAlumni = ['on','true',true].includes(req.body.isAlumni);
         }
-        if (req.body.isActive !== undefined) req.body.isActive = ['on','true',true].includes(req.body.isActive);
-        if (req.body.isAlumni !== undefined) req.body.isAlumni = ['on','true',true].includes(req.body.isAlumni);
         next();
     },
-    upload.single('photo'),
     handleUploadError,
     async (req, res) => {
         try {
