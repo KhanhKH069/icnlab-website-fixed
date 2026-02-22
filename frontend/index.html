@@ -73,30 +73,7 @@
             <p class="section-subtitle">Cập nhật hoạt động và sự kiện của lab</p>
         </div>
         <div class="news-grid" id="newsGrid">
-            <div class="news-card fade-in">
-                <div class="news-image"></div>
-                <div class="news-content">
-                    <div class="news-date">29/01/2026</div>
-                    <h4>Chúc Mừng Năm Mới Xuân Bính Ngọ 2026</h4>
-                    <p>Lab Mạng Kết Nối Thông Minh xin gửi lời chúc an khang, thịnh vượng tới toàn thể thầy cô, sinh viên và đối tác.</p>
-                </div>
-            </div>
-            <div class="news-card fade-in">
-                <div class="news-image"></div>
-                <div class="news-content">
-                    <div class="news-date">20/01/2026</div>
-                    <h4>ICN Lab tham gia tổ chức Hội nghị EIDT</h4>
-                    <p>Cùng đối tác quốc tế tổ chức hội nghị EIDT, quy tụ các nhà nghiên cứu từ khắp nơi trên thế giới.</p>
-                </div>
-            </div>
-            <div class="news-card fade-in">
-                <div class="news-image"></div>
-                <div class="news-content">
-                    <div class="news-date">15/01/2026</div>
-                    <h4>Vai trò chính tại Hội nghị ICIT</h4>
-                    <p>Thành viên lab đảm nhận các vị trí lãnh đạo quan trọng tại Hội nghị Quốc tế về Công nghệ Thông tin.</p>
-                </div>
-            </div>
+            <div class="loading">Đang tải tin tức...</div>
         </div>
     </section>
 
@@ -138,6 +115,35 @@
             entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
         }, { threshold: 0.1 });
         document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+    </script>
+    <script src="config.js"></script>
+    <script src="api.js"></script>
+    <script>
+        (function loadNews() {
+            var grid = document.getElementById('newsGrid');
+            if (!grid) return;
+            var baseUrl = typeof API_BASE_URL !== 'undefined' ? API_BASE_URL.replace('/api', '') : 'http://localhost:5000';
+            api.getNews({ page: 1, limit: 6 }).then(function(res) {
+                var news = res.data || [];
+                if (news.length === 0) {
+                    grid.innerHTML = '<p class="empty-state">Chưa có tin tức nào.</p>';
+                    return;
+                }
+                grid.innerHTML = news.map(function(item) {
+                    var dateStr = item.publishedDate ? new Date(item.publishedDate).toLocaleDateString('vi-VN') : '';
+                    var excerpt = (item.excerpt || item.content || '').substring(0, 150);
+                    if ((item.content || '').length > 150) excerpt += '...';
+                    var imgHtml = item.image
+                        ? '<img src="' + baseUrl + item.image + '" alt="">'
+                        : '';
+                    return '<div class="news-card fade-in"><div class="news-image">' + imgHtml + '</div><div class="news-content"><div class="news-date">' + dateStr + '</div><h4>' + (item.title || '') + '</h4><p>' + (excerpt || '') + '</p></div></div>';
+                }).join('');
+                var observer = new IntersectionObserver(function(entries) { entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 });
+                document.querySelectorAll('#newsGrid .fade-in').forEach(function(el) { observer.observe(el); });
+            }).catch(function() {
+                grid.innerHTML = '<p class="empty-state">Không tải được tin tức. Kiểm tra Backend đã chạy chưa.</p>';
+            });
+        })();
     </script>
     <script src="js/seasonal-hero.js"></script>
 </body>
