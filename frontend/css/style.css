@@ -198,6 +198,26 @@ nav {
     display: none;
 }
 
+/* Hero dark theme (Tết, Christmas, Winter, Back to school, Tết dương lịch) */
+.hero.hero--dark .hero-content h1,
+.hero.hero--dark .hero-content > p {
+    color: rgba(255, 255, 255, 0.95);
+}
+.hero.hero--dark .hero-content .seasonal-text {
+    color: var(--hero-accent, #fbbf24) !important;
+    background: rgba(255, 255, 255, 0.15);
+}
+.hero.hero--dark .stat-number {
+    color: var(--hero-accent, #fbbf24);
+}
+.hero.hero--dark .stat-label {
+    color: rgba(255, 255, 255, 0.8);
+}
+.hero.hero--dark::before,
+.hero.hero--dark::after {
+    opacity: 0.2;
+}
+
 .hero-content {
     position: relative;
     z-index: 2;
