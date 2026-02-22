@@ -90,12 +90,14 @@ router.post('/',
     auth,
     isEditor,
     setUploadType('news'),
+    upload.single('image'),
     (req, res, next) => {
-        if (req.body.isPublished !== undefined) req.body.isPublished = ['on','true',true].includes(req.body.isPublished);
-        if (req.body.tags && typeof req.body.tags === 'string') req.body.tags = req.body.tags.split(',').map(t => t.trim()).filter(Boolean);
+        if (req.body) {
+            if (req.body.isPublished !== undefined) req.body.isPublished = ['on','true',true].includes(req.body.isPublished);
+            if (req.body.tags && typeof req.body.tags === 'string') req.body.tags = req.body.tags.split(',').map(t => t.trim()).filter(Boolean);
+        }
         next();
     },
-    upload.single('image'),
     handleUploadError,
     [
         body('title').trim().notEmpty().isLength({ max: 200 }),
@@ -143,7 +145,7 @@ router.post('/',
             console.error('Create news error:', error);
             res.status(500).json({
                 success: false,
-                message: 'Server error'
+                message: error.message || 'Server error'
             });
         }
     }
@@ -156,12 +158,14 @@ router.put('/:id',
     auth,
     isEditor,
     setUploadType('news'),
+    upload.single('image'),
     (req, res, next) => {
-        if (req.body.isPublished !== undefined) req.body.isPublished = ['on','true',true].includes(req.body.isPublished);
-        if (req.body.tags && typeof req.body.tags === 'string') req.body.tags = req.body.tags.split(',').map(t => t.trim()).filter(Boolean);
+        if (req.body) {
+            if (req.body.isPublished !== undefined) req.body.isPublished = ['on','true',true].includes(req.body.isPublished);
+            if (req.body.tags && typeof req.body.tags === 'string') req.body.tags = req.body.tags.split(',').map(t => t.trim()).filter(Boolean);
+        }
         next();
     },
-    upload.single('image'),
     handleUploadError,
     async (req, res) => {
         try {
@@ -200,7 +204,7 @@ router.put('/:id',
             console.error('Update news error:', error);
             res.status(500).json({
                 success: false,
-                message: 'Server error'
+                message: error.message || 'Server error'
             });
         }
     }
