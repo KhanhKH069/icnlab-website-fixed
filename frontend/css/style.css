@@ -356,11 +356,14 @@ nav {
     box-shadow: 
         0 25px 50px -12px rgba(26, 26, 46, 0.12),
         0 0 0 1px var(--mist);
+    min-height: 320px;
+    background: linear-gradient(145deg, rgba(224, 122, 95, 0.2), rgba(129, 178, 154, 0.15));
 }
 
 .intro-image img {
     width: 100%;
     height: 100%;
+    min-height: 320px;
     object-fit: cover;
 }
 
@@ -637,7 +640,17 @@ nav {
     color: var(--coral);
     font-weight: 600;
     font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.member-degree-affiliation {
+    color: var(--ink-soft);
+    font-size: 0.85rem;
     margin-bottom: 0.6rem;
+}
+
+.member-card-clickable {
+    cursor: pointer;
 }
 
 .member-bio {
@@ -688,6 +701,90 @@ nav {
     color: white;
     transform: scale(1.1);
 }
+
+/* ---------- Member detail modal ---------- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(26, 26, 46, 0.4);
+    backdrop-filter: blur(6px);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s var(--ease-out), visibility 0.3s var(--ease-out);
+}
+.modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+.modal-box {
+    background: var(--cream);
+    border-radius: 24px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 25px 60px -12px rgba(26, 26, 46, 0.25);
+}
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background: var(--warm);
+    border-radius: 50%;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--ink-soft);
+    z-index: 1;
+    transition: background 0.2s, color 0.2s;
+}
+.modal-close:hover {
+    background: var(--coral);
+    color: white;
+}
+.modal-member-detail {
+    padding: 0;
+}
+#memberDetailContent {
+    padding: 2rem;
+}
+.member-detail-photo {
+    width: 100%;
+    height: 280px;
+    background: linear-gradient(145deg, rgba(224, 122, 95, 0.15), rgba(129, 178, 154, 0.1));
+    overflow: hidden;
+}
+.member-detail-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.member-detail-photo .member-photo-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+}
+.member-detail-body { margin-top: 1.5rem; }
+.member-detail-name { font-size: 1.5rem; margin-bottom: 0.25rem; }
+.member-detail-position { color: var(--coral); font-weight: 600; margin-bottom: 0.25rem; }
+.member-detail-degree-affiliation { color: var(--ink-soft); font-size: 0.95rem; margin-bottom: 1rem; }
+.member-detail-bio { color: var(--ink-soft); line-height: 1.7; margin-bottom: 1rem; }
+.member-detail-interests { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+.member-detail-social { font-size: 0.9rem; color: var(--ink-soft); }
+.member-detail-social a { color: var(--coral); text-decoration: none; }
+.member-detail-social a:hover { text-decoration: underline; }
 
 /* ---------- Page header - softer ---------- */
 .page-header {

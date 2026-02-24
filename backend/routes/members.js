@@ -117,6 +117,8 @@ router.post('/',
                 email: req.body.email,
                 phone: req.body.phone,
                 position: req.body.position,
+                academicTitle: req.body.academicTitle,
+                affiliation: req.body.affiliation,
                 bio: req.body.bio,
                 researchInterests: req.body.researchInterests || [],
                 education: req.body.education || [],
@@ -195,7 +197,7 @@ router.put('/:id',
             }
 
             const updateFields = [
-                'name', 'email', 'phone', 'position', 'bio', 'researchInterests',
+                'name', 'email', 'phone', 'position', 'academicTitle', 'affiliation', 'bio', 'researchInterests',
                 'education', 'socialLinks', 'joinDate', 'isActive', 'isAlumni', 'order'
             ];
             

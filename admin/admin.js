@@ -757,6 +757,21 @@ function openMemberModal(id = null) {
                 </select>
             </div>
             <div class="form-group">
+                <label>Học vị (Academic Title)</label>
+                <select name="academicTitle" id="member-academicTitle">
+                    <option value="">— Chọn —</option>
+                    <option value="Prof.">Prof.</option>
+                    <option value="Assoc. Prof.">Assoc. Prof.</option>
+                    <option value="Dr.">Dr.</option>
+                    <option value="MSc">MSc</option>
+                    <option value="BSc">BSc</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Trường / Đơn vị (Affiliation)</label>
+                <input type="text" name="affiliation" id="member-affiliation" placeholder="VD: PTIT, Ha Noi">
+            </div>
+            <div class="form-group">
                 <label>Bio</label>
                 <textarea name="bio" id="member-bio" rows="3"></textarea>
             </div>
@@ -803,6 +818,8 @@ async function loadMemberData(id) {
         document.getElementById('member-name').value = m.name || '';
         document.getElementById('member-email').value = m.email || '';
         document.getElementById('member-position').value = m.position || 'undergraduate';
+        document.getElementById('member-academicTitle').value = m.academicTitle || '';
+        document.getElementById('member-affiliation').value = m.affiliation || '';
         document.getElementById('member-bio').value = m.bio || '';
         document.getElementById('member-interests').value = (m.researchInterests || []).join(', ');
         document.getElementById('member-active').checked = m.isActive !== false;

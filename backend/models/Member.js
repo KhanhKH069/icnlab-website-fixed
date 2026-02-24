@@ -22,6 +22,14 @@ const memberSchema = new mongoose.Schema({
         enum: ['professor', 'associate_professor', 'assistant_professor', 'postdoc', 'phd_student', 'master_student', 'undergraduate', 'research_assistant', 'collaborator'],
         required: true
     },
+    academicTitle: {
+        type: String,
+        trim: true
+    },
+    affiliation: {
+        type: String,
+        trim: true
+    },
     bio: {
         type: String
     },
