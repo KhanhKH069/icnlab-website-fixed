@@ -772,8 +772,8 @@ function openMemberModal(id = null) {
                 <input type="text" name="affiliation" id="member-affiliation" placeholder="VD: PTIT, Ha Noi">
             </div>
             <div class="form-group">
-                <label>Bio</label>
-                <textarea name="bio" id="member-bio" rows="3"></textarea>
+                <label>Mô tả ngắn (Description)</label>
+                <textarea name="bio" id="member-bio" rows="3" placeholder="Assoc. Prof. Dr. - Posts and Telecommunications Institute of Technology, Ha Noi, Viet Nam"></textarea>
             </div>
             <div class="form-group">
                 <label>Photo</label>
@@ -782,7 +782,19 @@ function openMemberModal(id = null) {
             </div>
             <div class="form-group">
                 <label>Research Interests (comma separated)</label>
-                <input type="text" name="researchInterests" id="member-interests" placeholder="IoT, 5G, Security">
+                <input type="text" name="researchInterests" id="member-interests" placeholder="Wireless network, performance, security">
+            </div>
+            <div class="form-group">
+                <label>Google Scholar</label>
+                <input type="url" name="googleScholar" id="member-googleScholar" placeholder="https://scholar.google.com/...">
+            </div>
+            <div class="form-group">
+                <label>ORCID</label>
+                <input type="url" name="orcid" id="member-orcid" placeholder="https://orcid.org/...">
+            </div>
+            <div class="form-group">
+                <label>LinkedIn</label>
+                <input type="url" name="linkedin" id="member-linkedin" placeholder="https://www.linkedin.com/in/...">
             </div>
             <div class="form-group">
                 <label>
@@ -822,6 +834,10 @@ async function loadMemberData(id) {
         document.getElementById('member-affiliation').value = m.affiliation || '';
         document.getElementById('member-bio').value = m.bio || '';
         document.getElementById('member-interests').value = (m.researchInterests || []).join(', ');
+        const links = m.socialLinks || {};
+        document.getElementById('member-googleScholar').value = links.googleScholar || '';
+        document.getElementById('member-orcid').value = links.orcid || '';
+        document.getElementById('member-linkedin').value = links.linkedin || '';
         document.getElementById('member-active').checked = m.isActive !== false;
         document.getElementById('member-alumni').checked = m.isAlumni === true;
     } catch (error) {
@@ -839,6 +855,13 @@ async function saveMember(event, id) {
         ? form.researchInterests.value.split(',').map(s => s.trim()).filter(Boolean)
         : [];
     formData.set('researchInterests', JSON.stringify(interests));
+
+    const socialLinks = {
+        googleScholar: form.googleScholar?.value.trim() || '',
+        orcid: form.orcid?.value.trim() || '',
+        linkedin: form.linkedin?.value.trim() || ''
+    };
+    formData.set('socialLinks', JSON.stringify(socialLinks));
 
     if (!formData.get('photo')?.size) formData.delete('photo');
 

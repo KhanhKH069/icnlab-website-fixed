@@ -48,6 +48,7 @@ const memberSchema = new mongoose.Schema({
     }],
     socialLinks: {
         googleScholar: String,
+        orcid: String,
         linkedin: String,
         github: String,
         researchGate: String,

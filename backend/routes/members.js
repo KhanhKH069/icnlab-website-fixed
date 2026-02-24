@@ -84,6 +84,13 @@ router.post('/',
             }
             if (req.body.isActive !== undefined) req.body.isActive = ['on','true',true].includes(req.body.isActive);
             if (req.body.isAlumni !== undefined) req.body.isAlumni = ['on','true',true].includes(req.body.isAlumni);
+            if (typeof req.body.socialLinks === 'string') {
+                try {
+                    req.body.socialLinks = JSON.parse(req.body.socialLinks);
+                } catch (e) {
+                    // ignore parse error, keep as is
+                }
+            }
         }
         next();
     },
@@ -170,6 +177,13 @@ router.put('/:id',
             }
             if (req.body.isActive !== undefined) req.body.isActive = ['on','true',true].includes(req.body.isActive);
             if (req.body.isAlumni !== undefined) req.body.isAlumni = ['on','true',true].includes(req.body.isAlumni);
+            if (typeof req.body.socialLinks === 'string') {
+                try {
+                    req.body.socialLinks = JSON.parse(req.body.socialLinks);
+                } catch (e) {
+                    // ignore parse error, keep as is
+                }
+            }
         }
         next();
     },

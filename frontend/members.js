@@ -174,6 +174,7 @@ function openMemberDetail(id) {
             if (m.socialLinks) {
                 const links = [];
                 if (m.socialLinks.googleScholar) links.push(`<a href="${m.socialLinks.googleScholar}" target="_blank" rel="noopener">Google Scholar</a>`);
+                if (m.socialLinks.orcid) links.push(`<a href="${m.socialLinks.orcid}" target="_blank" rel="noopener">ORCID</a>`);
                 if (m.socialLinks.linkedin) links.push(`<a href="${m.socialLinks.linkedin}" target="_blank" rel="noopener">LinkedIn</a>`);
                 if (m.socialLinks.github) links.push(`<a href="${m.socialLinks.github}" target="_blank" rel="noopener">GitHub</a>`);
                 if (m.socialLinks.personalWebsite) links.push(`<a href="${m.socialLinks.personalWebsite}" target="_blank" rel="noopener">Website</a>`);
